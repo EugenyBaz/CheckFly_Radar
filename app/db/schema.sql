@@ -59,6 +59,8 @@ CREATE TABLE IF NOT EXISTS subscriptions (
 
     max_price INTEGER,
 
+    currency TEXT DEFAULT 'RUB',
+
     status TEXT DEFAULT 'active',
 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
