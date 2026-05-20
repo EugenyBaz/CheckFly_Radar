@@ -95,6 +95,7 @@ class SubscriptionRepository:
                     children=row["children"],
                     baggage_mode=row["baggage_mode"],
                     max_price=row["max_price"],
+                    currency=row["currency"],
                     status=row["status"],
                     created_at=row["created_at"],
                     updated_at=row["updated_at"]

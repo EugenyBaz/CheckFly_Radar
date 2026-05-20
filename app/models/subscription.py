@@ -23,6 +23,8 @@ class Subscription:
 
     max_price: int | None = None
 
+    currency: str = "RUB"
+
     status: str = "active"
 
     created_at: datetime | None = None
