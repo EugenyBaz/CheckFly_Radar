@@ -7,10 +7,7 @@ from app.models.user import User
 class UserRepository:
 
     @staticmethod
-    def create_user(
-        telegram_id: int,
-        username: str | None = None
-    ) -> User:
+    def create_user(telegram_id: int, username: str | None = None) -> User:
 
         connection = get_connection()
 
@@ -24,7 +21,7 @@ class UserRepository:
             )
             VALUES (?, ?)
             """,
-            (telegram_id, username)
+            (telegram_id, username),
         )
 
         connection.commit()
@@ -33,16 +30,10 @@ class UserRepository:
 
         connection.close()
 
-        return User(
-            id=user_id,
-            telegram_id=telegram_id,
-            username=username
-        )
+        return User(id=user_id, telegram_id=telegram_id, username=username)
 
     @staticmethod
-    def get_by_telegram_id(
-        telegram_id: int
-    ) -> User | None:
+    def get_by_telegram_id(telegram_id: int) -> User | None:
 
         connection = get_connection()
 
@@ -54,7 +45,7 @@ class UserRepository:
             FROM users
             WHERE telegram_id = ?
             """,
-            (telegram_id,)
+            (telegram_id,),
         )
 
         row: Row | None = cursor.fetchone()
@@ -68,5 +59,22 @@ class UserRepository:
             id=row["id"],
             telegram_id=row["telegram_id"],
             username=row["username"],
-            created_at=row["created_at"]
+            created_at=row["created_at"],
+        )
+
+    @staticmethod
+    def get_by_id(user_id: int):
+        connection = get_connection()
+
+        cursor = connection.cursor()
+        cursor.execute(""" SELECT * FROM users WHERE id = ? """, (user_id,))
+        row = cursor.fetchone()
+        connection.close()
+        if not row:
+            return None
+        return User(
+            id=row["id"],
+            telegram_id=row["telegram_id"],
+            username=row["username"],
+            created_at=row["created_at"],
         )

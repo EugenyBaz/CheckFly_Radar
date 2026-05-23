@@ -16,83 +16,47 @@ router = Router()
 
 
 @router.message(Command("watch"))
-async def watch_command(
-        message: Message,
-        state: FSMContext
-) -> None:
-    await state.set_state(
-        WatchFlightState.origin
-    )
+async def watch_command(message: Message, state: FSMContext) -> None:
+    await state.set_state(WatchFlightState.origin)
 
-    await message.answer(
-        "Введите группу вылета (SPB/MOSCOW)"
-    )
+    await message.answer("Введите группу вылета (SPB/MOSCOW)")
 
 
 @router.message(WatchFlightState.origin)
-async def process_origin(
-        message: Message,
-        state: FSMContext
-) -> None:
-    await state.update_data(
-        origin=message.text.strip().upper()
-    )
+async def process_origin(message: Message, state: FSMContext) -> None:
+    await state.update_data(origin=message.text.strip().upper())
 
-    await state.set_state(
-        WatchFlightState.destination
-    )
+    await state.set_state(WatchFlightState.destination)
 
-    await message.answer(
-        "Введите направление (TURKEY_COAST):"
-    )
+    await message.answer("Введите направление (TURKEY_COAST):")
 
 
 @router.message(WatchFlightState.destination)
-async def process_destination(
-        message: Message,
-        state: FSMContext
-) -> None:
-    await state.update_data(
-        destination=message.text.strip().upper()
-    )
+async def process_destination(message: Message, state: FSMContext) -> None:
+    await state.update_data(destination=message.text.strip().upper())
 
-    await state.set_state(
-        WatchFlightState.date_from
-    )
+    await state.set_state(WatchFlightState.date_from)
 
-    await message.answer(
-        "Введите дату начала (DD-MM-YYYY):"
-    )
+    await message.answer("Введите дату начала (DD-MM-YYYY):")
 
 
 @router.message(WatchFlightState.date_from)
-async def process_date_from(
-        message: Message,
-        state: FSMContext
-) -> None:
+async def process_date_from(message: Message, state: FSMContext) -> None:
     try:
         parsed_date = datetime.strptime(message.text, "%d-%m-%Y")
     except ValueError:
         await message.answer("❌ Неверный формат даты\n" "Используйте: 15-06-2026")
         return
 
-    await state.update_data(
-        date_from=parsed_date.date())
+    await state.update_data(date_from=parsed_date.date())
 
-    await state.set_state(
-        WatchFlightState.date_to
-    )
+    await state.set_state(WatchFlightState.date_to)
 
-    await message.answer(
-        "Введите дату конца (DD-MM-YYYY):"
-    )
+    await message.answer("Введите дату конца (DD-MM-YYYY):")
 
 
 @router.message(WatchFlightState.date_to)
-async def process_date_to(
-        message: Message,
-        state: FSMContext
-) -> None:
+async def process_date_to(message: Message, state: FSMContext) -> None:
     try:
         parsed_date = datetime.strptime(message.text, "%d-%m-%Y")
     except ValueError:
@@ -105,24 +69,15 @@ async def process_date_to(
         await message.answer("❌ Дата конца не может быть раньше даты начала")
         return
 
-    await state.update_data(
-        date_to=parsed_date.date()
-    )
+    await state.update_data(date_to=parsed_date.date())
 
-    await state.set_state(
-        WatchFlightState.max_price
-    )
+    await state.set_state(WatchFlightState.max_price)
 
-    await message.answer(
-        "Введите максимальную цену:"
-    )
+    await message.answer("Введите максимальную цену:")
 
 
 @router.message(WatchFlightState.max_price)
-async def process_max_price(
-        message: Message,
-        state: FSMContext
-) -> None:
+async def process_max_price(message: Message, state: FSMContext) -> None:
     try:
         max_price = int(message.text)
     except ValueError:
@@ -147,13 +102,10 @@ async def process_max_price(
         date_from=data["date_from"],
         date_to=data["date_to"],
         max_price=max_price,
-        currency="RUB"
-
+        currency="RUB",
     )
 
-    SubscriptionRepository.create_subscription(
-        subscription
-    )
+    SubscriptionRepository.create_subscription(subscription)
 
     await message.answer(
         f"✈️ Мониторинг создан\n\n"
@@ -161,7 +113,8 @@ async def process_max_price(
         f"{data['origin']} → {data['destination']}\n\n"
         f"Даты:\n"
         f"{data['date_from'].strftime('%d-%m-%Y')} → {data['date_to'].strftime('%d-%m-%Y')}\n\n"
-        f"Максимальная цена:\n" f"{max_price} RUB"
+        f"Максимальная цена:\n"
+        f"{max_price} RUB"
     )
 
     await state.clear()

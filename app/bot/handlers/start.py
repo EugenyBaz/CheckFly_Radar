@@ -10,7 +10,9 @@ router = Router()
 async def start_handler(message: Message) -> None:
     telegram_user = message.from_user
 
-
-    user = UserService.get_or_create_user(telegram_id=telegram_user.id, username=telegram_user.username)
-    await message.answer(f"Welcome to CheckFly Radar ✈️\n"
-                         f"User registered: {user.username}")
+    user = UserService.get_or_create_user(
+        telegram_id=telegram_user.id, username=telegram_user.username
+    )
+    await message.answer(
+        f"Welcome to CheckFly Radar ✈️\n" f"User registered: {user.username}"
+    )
