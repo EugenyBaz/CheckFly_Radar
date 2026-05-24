@@ -1,13 +1,15 @@
 import asyncio
-from app.bot.middlewares.access_middleware import ( AccessMiddleware )
+import os
+
 from aiogram import Bot, Dispatcher
+from aiogram.types import BotCommand
+from dotenv import load_dotenv
+
+from app.bot.middlewares.access_middleware import AccessMiddleware
 from app.bot.routers import setup_routers
 from app.db.database import init_db
 from app.db.seed import seed_airport_groups
-from aiogram.types import BotCommand
-import os
 from app.scheduler.flight_scheduler import run_scheduler
-from dotenv import load_dotenv
 
 load_dotenv()
 

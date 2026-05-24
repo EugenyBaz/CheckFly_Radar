@@ -1,6 +1,7 @@
 from aiogram import Router
 from aiogram.filters import CommandStart
 from aiogram.types import Message
+
 from app.services.user_service import UserService
 
 router = Router()

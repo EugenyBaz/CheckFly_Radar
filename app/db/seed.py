@@ -36,20 +36,26 @@ def seed_airport_groups() -> None:
         ("TURKEY_COAST", "GZP"),
     ]
 
-    airport_aliases = [("москва", "MOSCOW"),
-                       ("moscow", "MOSCOW"),
-                       ("спб", "SPB"),
-                       ("питер", "SPB"),
-                       ("санкт-петербург", "SPB"),
-                       ("турция", "TURKEY_COAST"),
-                       ("анталия", "TURKEY_COAST"),
-                       ("газипаша", "TURKEY_COAST"), ]
+    airport_aliases = [
+        ("москва", "MOSCOW"),
+        ("moscow", "MOSCOW"),
+        ("спб", "SPB"),
+        ("питер", "SPB"),
+        ("санкт-петербург", "SPB"),
+        ("турция", "TURKEY_COAST"),
+        ("анталия", "TURKEY_COAST"),
+        ("газипаша", "TURKEY_COAST"),
+    ]
 
-    cursor.executemany(""" INSERT OR IGNORE INTO airport_group_aliases ( alias, group_code ) VALUES (?, ?) """,
-                       airport_aliases, )
+    cursor.executemany(
+        """ INSERT OR IGNORE INTO airport_group_aliases ( alias, group_code ) VALUES (?, ?) """,
+        airport_aliases,
+    )
 
-    cursor.executemany(""" INSERT OR IGNORE INTO airport_group_members ( group_code, airport_code ) VALUES (?, ?) """,
-                       airport_group_members, )
+    cursor.executemany(
+        """ INSERT OR IGNORE INTO airport_group_members ( group_code, airport_code ) VALUES (?, ?) """,
+        airport_group_members,
+    )
 
     connection.commit()
 

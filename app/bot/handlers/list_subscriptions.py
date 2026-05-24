@@ -1,13 +1,9 @@
 from aiogram import Router
-from aiogram.types import Message
 from aiogram.filters import Command, StateFilter
-from app.db.repositories.subscription_repository import (
-    SubscriptionRepository,
-)
+from aiogram.types import Message
 
-from app.db.repositories.user_repository import (
-    UserRepository,
-)
+from app.db.repositories.subscription_repository import SubscriptionRepository
+from app.db.repositories.user_repository import UserRepository
 
 router = Router()
 

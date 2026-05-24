@@ -1,21 +1,10 @@
 import asyncio
 
-from app.db.repositories.subscription_repository import (
-    SubscriptionRepository,
-)
-
-from app.services.flight_search_service import (
-    FlightSearchService,
-)
-from app.db.repositories.alert_repository import (
-    AlertRepository,
-)
-from app.db.repositories.user_repository import (
-    UserRepository,
-)
-from app.services.telegram_alert_service import (
-    TelegramAlertService,
-)
+from app.db.repositories.alert_repository import AlertRepository
+from app.db.repositories.subscription_repository import SubscriptionRepository
+from app.db.repositories.user_repository import UserRepository
+from app.services.flight_search_service import FlightSearchService
+from app.services.telegram_alert_service import TelegramAlertService
 
 
 async def run_scheduler(bot):
@@ -27,7 +16,7 @@ async def run_scheduler(bot):
 
         for subscription in subscriptions:
             try:
-                flights = (await FlightSearchService.search(subscription))
+                flights = await FlightSearchService.search(subscription)
 
             except Exception as e:
 

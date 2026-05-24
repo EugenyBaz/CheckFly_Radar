@@ -6,17 +6,15 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 
 from app.bot.states.watch import WatchFlightState
-from app.db.repositories.subscription_repository import (
-    SubscriptionRepository,
-)
+from app.db.repositories.subscription_repository import SubscriptionRepository
 from app.models.subscription import Subscription
+from app.services.airport_resolver_service import AirportResolverService
 from app.services.user_service import UserService
-from app.services.airport_resolver_service import ( AirportResolverService )
 
 router = Router()
 
 
-@router.message(StateFilter("*"),Command("watch"))
+@router.message(StateFilter("*"), Command("watch"))
 async def watch_command(message: Message, state: FSMContext) -> None:
     await state.set_state(WatchFlightState.origin)
 
@@ -34,8 +32,7 @@ async def process_origin(message: Message, state: FSMContext) -> None:
 
 @router.message(WatchFlightState.destination)
 async def process_destination(message: Message, state: FSMContext) -> None:
-    await state.update_data(destination=AirportResolverService.resolve(
-    message.text))
+    await state.update_data(destination=AirportResolverService.resolve(message.text))
 
     await state.set_state(WatchFlightState.date_from)
 

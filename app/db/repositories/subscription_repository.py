@@ -1,5 +1,6 @@
-from sqlite3 import Row
 from datetime import datetime
+from sqlite3 import Row
+
 from app.db.database import get_connection
 from app.models.subscription import Subscription
 
@@ -83,8 +84,8 @@ class SubscriptionRepository:
                     origin_group=row["origin_group"],
                     destination_group=row["destination_group"],
                     allow_moscow_transfer=bool(row["allow_moscow_transfer"]),
-                    date_from=datetime.strptime( row["date_from"], "%Y-%m-%d" ).date(),
-                    date_to=datetime.strptime( row["date_to"], "%Y-%m-%d" ).date(),
+                    date_from=datetime.strptime(row["date_from"], "%Y-%m-%d").date(),
+                    date_to=datetime.strptime(row["date_to"], "%Y-%m-%d").date(),
                     adults=row["adults"],
                     children=row["children"],
                     baggage_mode=row["baggage_mode"],
@@ -142,7 +143,9 @@ class SubscriptionRepository:
         connection = get_connection()
 
         cursor = connection.cursor()
-        cursor.execute(""" UPDATE subscriptions SET status = 'deleted' WHERE id = ? """,
-                       (subscription_id,))
+        cursor.execute(
+            """ UPDATE subscriptions SET status = 'deleted' WHERE id = ? """,
+            (subscription_id,),
+        )
         connection.commit()
         connection.close()

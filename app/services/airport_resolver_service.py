@@ -1,14 +1,10 @@
-from app.db.database import (
-    get_connection
-)
+from app.db.database import get_connection
 
 
 class AirportResolverService:
 
     @staticmethod
-    def resolve(
-        text: str
-    ) -> str:
+    def resolve(text: str) -> str:
 
         connection = get_connection()
 
@@ -20,7 +16,7 @@ class AirportResolverService:
             FROM airport_group_aliases
             WHERE lower(alias) = ?
             """,
-            (text.lower(),)
+            (text.lower(),),
         )
 
         row = cursor.fetchone()

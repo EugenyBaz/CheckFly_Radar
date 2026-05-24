@@ -1,7 +1,6 @@
 import os
 
 import httpx
-
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -54,4 +53,3 @@ class TravelpayoutsProvider:
             )
         print(f"Flights found: " f"{len(data['data'])}")
         return flights
-

@@ -1,13 +1,8 @@
-from datetime import datetime
 import asyncio
+from datetime import datetime
 
-from app.providers.travelpayouts_provider import (
-    TravelpayoutsProvider
-)
-
-from app.db.repositories.airport_group_repository import (
-    AirportGroupRepository
-)
+from app.db.repositories.airport_group_repository import AirportGroupRepository
+from app.providers.travelpayouts_provider import TravelpayoutsProvider
 
 
 class FlightSearchService:
@@ -17,18 +12,12 @@ class FlightSearchService:
 
         matched_flights = []
 
-        origin_airports = (
-            AirportGroupRepository
-            .get_airports_by_group(
-                subscription.origin_group
-            )
+        origin_airports = AirportGroupRepository.get_airports_by_group(
+            subscription.origin_group
         )
 
-        destination_airports = (
-            AirportGroupRepository
-            .get_airports_by_group(
-                subscription.destination_group
-            )
+        destination_airports = AirportGroupRepository.get_airports_by_group(
+            subscription.destination_group
         )
 
         for origin in origin_airports:
@@ -37,48 +26,30 @@ class FlightSearchService:
 
                 await asyncio.sleep(0)
 
-                print(
-                    f"Searching: "
-                    f"{origin} → {destination}"
-                )
+                print(f"Searching: " f"{origin} → {destination}")
 
-                flights = (
-                    TravelpayoutsProvider
-                    .search_flights(
-                        origin=origin,
-                        destination=destination
-                    )
+                flights = TravelpayoutsProvider.search_flights(
+                    origin=origin, destination=destination
                 )
 
                 for flight in flights:
 
-                    departure_date = (
-                        datetime.fromisoformat(
-                            flight["departure_at"]
-                        ).date()
-                    )
+                    departure_date = datetime.fromisoformat(
+                        flight["departure_at"]
+                    ).date()
 
                     if (
-                        departure_date
-                        < subscription.date_from
-                        or departure_date
-                        > subscription.date_to
+                        departure_date < subscription.date_from
+                        or departure_date > subscription.date_to
                     ):
 
                         continue
 
                     if (
                         subscription.max_price
-                        and flight["price"]
-                        <= subscription.max_price
+                        and flight["price"] <= subscription.max_price
                     ):
 
-                        matched_flights.append(
-                            flight
-                        )
+                        matched_flights.append(flight)
 
         return matched_flights
-
-
-
-

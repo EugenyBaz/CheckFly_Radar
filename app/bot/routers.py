@@ -1,9 +1,10 @@
 from aiogram import Router
-from app.bot.handlers.start import router as start_router
-from app.bot.handlers.watch import router as watch_router
-from app.bot.handlers.list_subscriptions import router as list_router
+
 from app.bot.handlers.cancel import router as cancel
 from app.bot.handlers.delete import router as delete_router
+from app.bot.handlers.list_subscriptions import router as list_router
+from app.bot.handlers.start import router as start_router
+from app.bot.handlers.watch import router as watch_router
 
 
 def setup_routers() -> Router:
