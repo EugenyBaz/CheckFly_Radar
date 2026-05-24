@@ -1,0 +1,63 @@
+name: CheckFly_Radar CI/CD
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Poetry
+        run: pip install poetry
+
+      - name: Install dependencies
+        run: poetry install --no-root
+
+      - name: Run Isort
+        run: poetry run isort . --check
+
+      - name: Run Black
+        run: poetry run black . --check
+
+      - name: Run Flake8
+        run: poetry run flake8 .
+
+
+
+
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    needs: lint
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.VPS_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+      - name: Add host
+        run: |
+          ssh-keyscan -H ${{ secrets.VPS_SSH_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy to VPS
+        run: |
+          ssh ${{ secrets.VPS_SSH_USER }}@${{ secrets.VPS_SSH_HOST }} '
+            cd /root/checkfly_radar/CheckFly_Radar &&
+            git pull origin main &&
+            /usr/local/bin/poetry install --no-root &&
+            systemctl restart checkfly_radar
+          '
