@@ -1,7 +1,6 @@
 from aiogram import Router
-from aiogram.filters import Command
 from aiogram.types import Message
-
+from aiogram.filters import Command, StateFilter
 from app.db.repositories.subscription_repository import (
     SubscriptionRepository,
 )
@@ -13,7 +12,7 @@ from app.db.repositories.user_repository import (
 router = Router()
 
 
-@router.message(Command("list"))
+@router.message(StateFilter("*"), Command("list"))
 async def list_command(message: Message) -> None:
 
     telegram_user = message.from_user

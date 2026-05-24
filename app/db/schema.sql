@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS airport_groups (
 
     code TEXT UNIQUE NOT NULL,
     name TEXT NOT NULL
+
 );
 
 -- =========================================================
@@ -32,7 +33,9 @@ CREATE TABLE IF NOT EXISTS airport_group_members (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
 
     group_code TEXT NOT NULL,
-    airport_code TEXT NOT NULL
+    airport_code TEXT NOT NULL,
+
+    UNIQUE(group_code, airport_code)
 );
 
 -- =========================================================
@@ -133,4 +136,15 @@ ON flight_history(subscription_id);
 
 CREATE INDEX IF NOT EXISTS idx_users_telegram_id
 ON users(telegram_id);
+
+
+CREATE TABLE IF NOT EXISTS airport_group_aliases (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+    alias TEXT NOT NULL,
+    group_code TEXT NOT NULL,
+
+    UNIQUE(alias, group_code)
+)
+
 

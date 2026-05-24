@@ -1,5 +1,5 @@
 from aiogram import Router
-from aiogram.filters import Command
+from aiogram.filters import Command, StateFilter
 from aiogram.types import Message
 
 from app.db.repositories.subscription_repository import (
@@ -14,7 +14,7 @@ from app.services.user_service import (
 router = Router()
 
 
-@router.message(Command("delete"))
+@router.message(StateFilter("*"), Command("delete"))
 async def delete_command(
     message: Message
 ) -> None:

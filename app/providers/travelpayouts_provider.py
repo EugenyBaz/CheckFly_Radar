@@ -52,6 +52,6 @@ class TravelpayoutsProvider:
                     "link": (f"https://www.aviasales.ru" f"{item['link']}"),
                 }
             )
-        print(data)
+        print(f"Flights found: " f"{len(data['data'])}")
         return flights
 

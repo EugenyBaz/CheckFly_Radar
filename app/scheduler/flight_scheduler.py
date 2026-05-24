@@ -26,8 +26,13 @@ async def run_scheduler(bot):
         subscriptions = SubscriptionRepository.get_active_subscriptions()
 
         for subscription in subscriptions:
+            try:
+                flights = (await FlightSearchService.search(subscription))
 
-            flights = FlightSearchService.search(subscription)
+            except Exception as e:
+
+                print(f"Scheduler error: {e}")
+                continue
 
             for flight in flights:
                 flight_hash = (
@@ -55,4 +60,4 @@ async def run_scheduler(bot):
                 )
                 print(f"Alert sent: {flight_hash}")
 
-        await asyncio.sleep(30)
+        await asyncio.sleep(300)
