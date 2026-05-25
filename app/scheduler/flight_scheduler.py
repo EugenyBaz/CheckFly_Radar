@@ -1,4 +1,7 @@
 import asyncio
+from datetime import datetime
+
+import pytz
 
 from app.db.repositories.alert_repository import AlertRepository
 from app.db.repositories.subscription_repository import SubscriptionRepository
@@ -8,7 +11,16 @@ from app.services.telegram_alert_service import TelegramAlertService
 
 
 async def run_scheduler(bot):
+
     while True:
+
+        moscow_tz = pytz.timezone("Europe/Moscow")
+        current_hour = datetime.now(moscow_tz).hour
+
+        if current_hour < 8 or current_hour >= 23:
+            print("Sleeping hours...")
+            await asyncio.sleep(3600)
+            continue
 
         print("Scheduler tick...")
 
@@ -49,4 +61,4 @@ async def run_scheduler(bot):
                 )
                 print(f"Alert sent: {flight_hash}")
 
-        await asyncio.sleep(300)
+        await asyncio.sleep(3600)
